@@ -1,70 +1,247 @@
 "use client";
 import Image from "next/image";
-import "./style.css";
 import { motion } from "framer-motion";
-// import ViewWork from "../Animations/ViewWork";
+import { useState } from "react";
+import Link from "next/link";
+
 const ProjectSection = ({ data }) => {
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+
+  const handleMouseEnter = (index) => {
+    setHoveredIndex(index);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredIndex(null);
+  };
+
   return (
-    <>
+    <div className="flex flex-col items-center justify-center gap-16 w-screen max-w-full px-36 pr-[11rem] text-center text-white">
       {data && data.length > 0 ? (
         data.map((section, index) => (
-          <div
+          <motion.div
             key={index}
-            className="w-screen max-w-full flex items-center justify-center p-6 px-12 text-white object-contain font-sans"
+            className={`flex items-center ${
+              section.left ? "justify-start" : "justify-end"
+            } min-h-[50vh] px-16 w-full`}
           >
-            <motion.div
-              initial={{
-                opacity: 0, // Initially hidden
-                transform: `translateX(15.1692px) translateY(15.1692px) scale(0.688308) rotateY(15.1692deg)`, // Initial transform for "from behind" effect
-              }}
-              whileInView={{
-                opacity: 1, // Animate to full opacity when in view
-                transform: `translateX(0px) translateY(0px) scale(1) rotateY(0deg)`, // Transform to normal state
-              }}
-              viewport={{ once: true }}
-              transition={{ ease: "easeOut", duration: 1.3 }} // Adjust duration and easing for desired animation
-              // viewport={{ once: true }}
-              className="h-[80vh] w-[90vw] flex items-center justify-center gap-6"
-            >
-              <div className="basis-1/2 h-[70%] w-full relative">
-                <Image
-                  fill
-                  className=" object-cover"
-                  src={section.image_src}
-                  alt=""
-                />
-              </div>
-              <div className="basis-1/2 h-[70%] w-full flex flex-col items-start justify-end gap-7 ">
-                <h1 className="text-base font-medium uppercase">
-                  {section.title}
-                </h1>
-                <p className="text-2xl font-semibold">{section.description}</p>
-                <a href={section.link} target="_blank">
-                  <motion.button
-                    whileTap={{ scale: 0.8 }}
-                    className="view_work uppercase tracking-wider border-white border-[1px] rounded-3xl px-4 p-2 flex items-center justify-center gap-2 relative transition-all"
+            <div className="w-[30%]">
+              {section.link ? (
+                <Link href={section.link} target="_blank">
+                  <motion.div
+                    className={`relative flex flex-col items-center justify-center gap-3 transition-all ${
+                      section.lock ? "hover:grayscale" : ""
+                    }`}
+                    onMouseEnter={() => handleMouseEnter(index)}
+                    onMouseLeave={handleMouseLeave}
                   >
-                    {/* <ViewWork text="VIEW WORK" /> */}
-                    View Work
+                    {section.lock ? (
+                      <button
+                        className={`bg-[#D0D1D7] text-[#5D5D5D] font-bold p-5 px-8 rounded-full z-50 absolute top-[45%] -right-[15rem] -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-opacity duration-500 ${
+                          hoveredIndex === index ? "opacity-100" : "opacity-0"
+                        }`}
+                      >
+                        {section.lock_text}
+                      </button>
+                    ) : (
+                      <Image
+                        priority
+                        width={30}
+                        height={30}
+                        className={`object-cover hover:opacity-90 z-50 w-[7rem] h-[7rem] absolute top-1/2 ${
+                          section.left ? "-right-[11rem]" : "-right-[14rem]"
+                        } -translate-x-1/2 -translate-y-[70%] cursor-pointer transition-opacity duration-500 ${
+                          hoveredIndex === index ? "opacity-100" : "opacity-0"
+                        }`}
+                        src="/ArrowIcon.svg"
+                        alt=""
+                      />
+                    )}
+
+                    <div
+                      className={`relative ${
+                        section.left ? "w-[150%]" : "w-[185%]"
+                      } cursor-pointer justify-self-start transition-all ${
+                        section.left ? "aspect-[3/4]" : "aspect-[4/3]"
+                      }`}
+                    >
+                      {section.video ? (
+                        <>
+                          <video
+                            src={section.video}
+                            width="100%"
+                            className={`object-cover aspect-[3/4] transition-opacity duration-200 ${
+                              hoveredIndex === index ? "opacity-0" : "opacity-100"
+                            }`}
+                            autoPlay
+                            loop
+                            muted
+                          ></video>
+                          <Image
+                            priority
+                            fill
+                            className={`object-cover transition-opacity duration-200 absolute inset-0 ${
+                              hoveredIndex === index ? "opacity-100" : "opacity-0"
+                            }`}
+                            src={section.image_src}
+                            alt=""
+                          />
+                        </>
+                      ) : (
+                        <Image
+                          priority
+                          fill
+                          className={`object-cover transition-opacity duration-200 ${
+                            hoveredIndex === index ? "opacity-100" : "opacity-100"
+                          }`}
+                          src={section.image_src}
+                          alt=""
+                        />
+                      )}
+                    </div>
+
+                    <div
+                      className={`${
+                        section.left ? "w-[150%]" : "w-[185%]"
+                      } flex items-center justify-between`}
+                    >
+                      <div className="flex flex-col items-start justify-center w-full">
+                        <h1 className="text-lg font-semibold">{section.title}</h1>
+                        <p className="text-[#FDC52C] text-base font-semibold">
+                          {section.description}
+                        </p>
+                      </div>
+                      {section.lock ? (
+                        <div
+                          className={`transition-opacity duration-500 ${
+                            hoveredIndex === index ? "opacity-100" : "opacity-0"
+                          }`}
+                        >
+                          <Image
+                            width={40}
+                            height={40}
+                            className="object-cover"
+                            src="/LockKey.png"
+                            alt=""
+                          />
+                        </div>
+                      ) : (
+                        <></>
+                      )}
+                    </div>
+                  </motion.div>
+                </Link>
+              ) : (
+                <motion.div
+                  className={`relative flex flex-col items-center justify-center gap-3 transition-all ${
+                    section.lock ? "hover:grayscale" : ""
+                  }`}
+                  onMouseEnter={() => handleMouseEnter(index)}
+                  onMouseLeave={handleMouseLeave}
+                >
+                  {section.lock ? (
+                    <button
+                      className={`bg-[#D0D1D7] text-[#5D5D5D] font-bold p-5 px-8 rounded-full z-50 absolute top-[45%] -right-[15rem] -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-opacity duration-500 ${
+                        hoveredIndex === index ? "opacity-100" : "opacity-0"
+                      }`}
+                    >
+                      {section.lock_text}
+                    </button>
+                  ) : (
                     <Image
-                      width={27}
-                      height={20}
-                      className="object-contain arrow_btn_right "
-                      src="/rightArrow.svg"
-                      alt=""
                       priority
+                      width={30}
+                      height={30}
+                      className={`object-cover hover:opacity-80 z-50 w-[7rem] h-[7rem] absolute top-1/2 ${
+                        section.left ? "-right-[11rem]" : "-right-[14rem]"
+                      } -translate-x-1/2 -translate-y-[70%] cursor-pointer transition-opacity duration-500 ${
+                        hoveredIndex === index ? "opacity-100" : "opacity-0"
+                      }`}
+                      src="/ArrowIcon.svg"
+                      alt=""
                     />
-                  </motion.button>
-                  {/* <ViewWork text="VIEW WORK" /> */}
-                </a>
-              </div>
-            </motion.div>
-          </div>
+                  )}
+
+                  <div
+                    className={`relative ${
+                      section.left ? "w-[150%]" : "w-[185%]"
+                    } cursor-pointer justify-self-start transition-all ${
+                      section.left ? "aspect-[3/4]" : "aspect-[4/3]"
+                    }`}
+                  >
+                    {section.video ? (
+                      <>
+                        <video
+                          src={section.video}
+                          width="100%"
+                          className={`object-cover aspect-[3/4] transition-opacity duration-200 ${
+                            hoveredIndex === index ? "opacity-0" : "opacity-100"
+                          }`}
+                          autoPlay
+                          loop
+                          muted
+                        ></video>
+                        <Image
+                          priority
+                          fill
+                          className={`object-cover transition-opacity duration-200 absolute inset-0 ${
+                            hoveredIndex === index ? "opacity-100" : "opacity-0"
+                          }`}
+                          src={section.image_src}
+                          alt=""
+                        />
+                      </>
+                    ) : (
+                      <Image
+                        priority
+                        fill
+                        className={`object-cover transition-opacity duration-200 ${
+                          hoveredIndex === index ? "opacity-100" : "opacity-100"
+                        }`}
+                        src={section.image_src}
+                        alt=""
+                      />
+                    )}
+                  </div>
+
+                  <div
+                    className={`${
+                      section.left ? "w-[150%]" : "w-[185%]"
+                    } flex items-center justify-between`}
+                  >
+                    <div className="flex flex-col items-start justify-center w-full">
+                      <h1 className="text-lg font-semibold">{section.title}</h1>
+                      <p className="text-[#FDC52C] text-base font-semibold">
+                        {section.description}
+                      </p>
+                    </div>
+                    {section.lock ? (
+                      <div
+                        className={`transition-opacity duration-500 ${
+                          hoveredIndex === index ? "opacity-100" : "opacity-0"
+                        }`}
+                      >
+                        <Image
+                          width={40}
+                          height={40}
+                          className="object-cover"
+                          src="/LockKey.png"
+                          alt=""
+                        />
+                      </div>
+                    ) : (
+                      <></>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+            </div>
+          </motion.div>
         ))
       ) : (
-        <p className="text-white">Loading data...</p> // Display loading message while data is fetched
+        <p className="text-white">Loading data...</p>
       )}
-    </>
+    </div>
   );
 };
 

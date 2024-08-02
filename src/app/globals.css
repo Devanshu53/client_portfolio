@@ -9,3 +9,15 @@ body {
 ::-webkit-scrollbar{
   display: none;
 }
+@font-face {
+  font-family: 'Comic Sans';
+  src: url('../fonts/ComicSansMS3.ttf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Inter Medium';
+  src: url('../fonts/Inter-Medium.ttf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}

@@ -1,5 +1,6 @@
 "use client";
 import Description from "@/components/Description/Description";
+import DesignProcess from "@/components/DesignProcess/DesignProcess";
 import Footer from "@/components/Footer/Footer";
 import Hero from "@/components/Hero/Hero";
 import Navbar from "@/components/Navbar/Navbar";
@@ -16,6 +17,7 @@ export default function Home() {
       <div>
         <ProjectSection data={data.data} />
       </div>
+      <DesignProcess />
       <Footer />
     </div>
   );
